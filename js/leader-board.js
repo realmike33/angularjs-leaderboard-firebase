@@ -1,6 +1,24 @@
-var app = angular.module('leaderboard', ['firebase']);
+var app = angular.module('leaderboard', ['firebase', 'ui.router']);
 
-app.constant('FIREBASE_URI', 'PUT_YOUR_FIREBASE_HERE');
+app.config(function($stateProvider, $urlRouterProvider){
+  $urlRouterProvider.otherwise('/main');
+
+  $stateProvider
+    .state('main', {
+      url: '/',
+      templateUrl: 'templates/main.html'
+    })
+    .state('admin', {
+      url: '/admin',
+      templateUrl: 'templates/admin.html'
+    })
+    .state('remote', {
+      url: '/remote',
+      templateUrl: 'templates/remote.html'
+    })
+});
+
+app.constant('FIREBASE_URI', 'https://horse-race.firebaseio.com/');
 
 app.controller('MainCtrl', function (ContestantsService) {
     var main = this;
