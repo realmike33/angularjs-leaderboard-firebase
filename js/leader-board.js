@@ -4,19 +4,32 @@ app.config(function($stateProvider, $urlRouterProvider){
   $urlRouterProvider.otherwise('/');
 
   $stateProvider
-    .state('main', {
+    .state('home', {
       url: '/',
+      templateUrl: 'templates/home.html'
+    })
+    .state('rooms', {
+      url: '/rooms',
+      templateUrl: 'templates/rooms.html'
+    })
+    .state('main', {
+      url: '/main',
       templateUrl: 'templates/main.html'
     })
     .state('admin', {
       url: '/admin',
       templateUrl: 'templates/admin.html'
     })
+    .state('login', {
+      url: '/login',
+      templateUrl: 'templates/userAuth.html'
+    })
+
 });
 
 app.constant('FIREBASE_URI', 'https://horse-race.firebaseio.com/');
 
-app.controller('MainCtrl', function(ContestantsService, $scope, $interval) {
+app.controller('MainCtrl', function(ContestantsService, $scope, $interval, $state) {
     var main = this;
     main.newContestant = {lane: '', name: '', score: ''};
     main.currentContestant = null;
@@ -67,15 +80,27 @@ app.controller('MainCtrl', function(ContestantsService, $scope, $interval) {
       if(!winner.name){
         swal("Race has not begun", "Please start the race!", "error");
       }
-      swal(winner.name, "You won!", "success")
+      swal(winner.name, "You won!", "success");
+    };
 
+    $scope.login = function(){
+      var ref = new Firebase('https://horse-race.firebaseio.com/');
+      ref.authWithOAuthPopup("google", function(error, authData) {
+        if (error) {
+          console.log("Login Failed!", error);
+        } else {
+          $scope.name = authData.google.displayName;
+          $state.go('admin');
+        };
+      });
     };
 });
 
 app.service('ContestantsService', function ($firebaseArray, FIREBASE_URI) {
     var service = this;
     var ref = new Firebase(FIREBASE_URI);
-    var contestants = $firebaseArray(ref);
+    var contestants = $firebaseArray(ref.child('horses'));
+    var users = $firebaseArray(ref.child('users'));
 
     service.getContestants = function () {
         return contestants;
@@ -89,7 +114,22 @@ app.service('ContestantsService', function ($firebaseArray, FIREBASE_URI) {
         contestants.$save(contestant);
     };
 
-    service.removeContestant = function (contestant) {
-        contestants.$remove(contestant);
+    service.removeUser = function (user) {
+        users.$remove(user);
+    };
+    service.getUsers = function () {
+        return users;
+    };
+
+    service.addUser = function (user) {
+        users.$add(user);
+    };
+
+    service.updateUser = function (user) {
+        users.$save(user);
+    };
+
+    service.removeUser = function (user) {
+        users.$remove(user);
     };
 });
