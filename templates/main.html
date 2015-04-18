@@ -1,8 +1,11 @@
 <div class="container">
-  <button ui-sref="admin" class="btn btn-info">Admin</button>
+  <button ui-sref="admin" class="btn btn-primary">Change Race</button>
   <h3>Race to Awesome</h3>
   <button class="btn btn-info" ng-click="start()">Start</button>
   <button class="btn btn-info" ng-click="winner()">Winner</button>
+  <input ng-model="userBet.name" placeholder="name of horse"/>
+  <input ng-model="userBet.amount" placeholder="amount"/>
+  <button ng-click="bet()">bet</button>
     <div class="well">
       <table class="table">
         <thead>

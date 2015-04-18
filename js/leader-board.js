@@ -4,14 +4,6 @@ app.config(function($stateProvider, $urlRouterProvider){
   $urlRouterProvider.otherwise('/');
 
   $stateProvider
-    .state('home', {
-      url: '/',
-      templateUrl: 'templates/home.html'
-    })
-    .state('rooms', {
-      url: '/rooms',
-      templateUrl: 'templates/rooms.html'
-    })
     .state('main', {
       url: '/main',
       templateUrl: 'templates/main.html'
@@ -21,7 +13,7 @@ app.config(function($stateProvider, $urlRouterProvider){
       templateUrl: 'templates/admin.html'
     })
     .state('login', {
-      url: '/login',
+      url: '/',
       templateUrl: 'templates/userAuth.html'
     })
 
@@ -30,6 +22,7 @@ app.config(function($stateProvider, $urlRouterProvider){
 app.constant('FIREBASE_URI', 'https://horse-race.firebaseio.com/');
 
 app.controller('MainCtrl', function(ContestantsService, $scope, $interval, $state) {
+    $scope.userBet = {};
     var main = this;
     main.newContestant = {lane: '', name: '', score: ''};
     main.currentContestant = null;
@@ -48,14 +41,13 @@ app.controller('MainCtrl', function(ContestantsService, $scope, $interval, $stat
         ContestantsService.removeContestant(contestant);
     };
 
-    main.incrementScore = function () {
-        main.currentContestant.score = parseInt(main.currentContestant.score, 10) + 1;
-        main.updateContestant(main.currentContestant);
-    };
-
-    main.decrementScore = function () {
-        main.currentContestant.score = parseInt(main.currentContestant.score, 10) - 1;
-        main.updateContestant(main.currentContestant);
+    $scope.bet = function(amount, name){
+      var user = {};
+      user.name = $scope.name
+      user.contestant = $scope.userBet.name;
+      user.amount = $scope.userBet.amount;
+      console.log(user);
+      ContestantsService.addUser(user);
     };
 
     $scope.start = function(){
@@ -72,6 +64,7 @@ app.controller('MainCtrl', function(ContestantsService, $scope, $interval, $stat
     $scope.winner = function(){
       var winner = {score: 0};
       var contestants = ContestantsService.getContestants();
+      var users = ContestantsService.getUsers();
       contestants.forEach(function(contestant){
         if(contestant.score > winner.score){
           winner = contestant;
@@ -80,7 +73,15 @@ app.controller('MainCtrl', function(ContestantsService, $scope, $interval, $stat
       if(!winner.name){
         swal("Race has not begun", "Please start the race!", "error");
       }
-      swal(winner.name, "You won!", "success");
+      users.forEach(function(user){
+        if(user.contestant === winner.name){
+          var userBet = parseFloat(user.amount);
+          userBet *= Math.floor(Math.random() * 10);
+          user.winning = userBet;
+          ContestantsService.updateUser(user);
+          swal(user.name, "You won " + user.winning + "!", "success");
+        }
+      });
     };
 
     $scope.login = function(){
@@ -129,7 +130,4 @@ app.service('ContestantsService', function ($firebaseArray, FIREBASE_URI) {
         users.$save(user);
     };
 
-    service.removeUser = function (user) {
-        users.$remove(user);
-    };
 });
