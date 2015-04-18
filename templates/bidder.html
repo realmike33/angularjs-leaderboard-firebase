@@ -1,0 +1,24 @@
+<div class="container">
+  <button ui-sref="admin" class="btn btn-info">Admin</button>
+  <h3>Race to Awesome</h3>
+  <button class="btn btn-info" ng-click="start()">Start</button>
+  <button class="btn btn-info" ng-click="winner()">Winner</button>
+    <div class="well">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Bidder</th>
+            <th>Horse</th>
+            <th>Bet (bitcoin)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="bidder in main.bidders">
+            <td>{{bidder.name}}</td>
+            <td>{{bidder.horse}}</td>
+            <td>{{bidder.bet}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+</div>

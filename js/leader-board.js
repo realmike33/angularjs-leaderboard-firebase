@@ -20,6 +20,10 @@ app.config(function($stateProvider, $urlRouterProvider){
       url: '/admin',
       templateUrl: 'templates/admin.html'
     })
+    .state('bidder', {
+      url: '/bidder',
+      templateUrl: 'templates/bidder.html'
+    })
     .state('login', {
       url: '/login',
       templateUrl: 'templates/userAuth.html'
