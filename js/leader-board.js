@@ -64,6 +64,9 @@ app.controller('MainCtrl', function(ContestantsService, $scope, $interval) {
           winner = contestant;
         }
       });
+      if(!winner.name){
+        swal("Race has not begun", "Please start the race!", "error");
+      }
       swal(winner.name, "You won!", "success")
 
     };
