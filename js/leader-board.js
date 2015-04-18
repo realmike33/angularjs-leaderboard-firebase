@@ -12,10 +12,6 @@ app.config(function($stateProvider, $urlRouterProvider){
       url: '/admin',
       templateUrl: 'templates/admin.html'
     })
-    .state('remote', {
-      url: '/remote',
-      templateUrl: 'templates/remote.html'
-    })
 });
 
 app.constant('FIREBASE_URI', 'https://horse-race.firebaseio.com/');
