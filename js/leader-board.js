@@ -61,6 +61,7 @@ app.controller('MainCtrl', function(ContestantsService, $scope, $interval, $stat
          $interval(function(){
           contestant.score = parseFloat(contestant.score);
           contestant.score += Math.floor(Math.random() * 10);
+          ContestantsService.updateContestant(contestant);
           }, 1000, 10);
       });
     };
