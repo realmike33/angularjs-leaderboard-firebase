@@ -31,6 +31,7 @@ app.controller('MainCtrl', function(ContestantsService, $scope, $interval, $stat
     main.newContestant = {lane: '', name: '', score: ''};
     main.currentContestant = null;
     main.contestants = ContestantsService.getContestants();
+    main.bidders = ContestantsService.getUsers();
 
     main.addContestant = function () {
         ContestantsService.addContestant(angular.copy(main.newContestant));
